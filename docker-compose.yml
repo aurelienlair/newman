@@ -1,0 +1,7 @@
+version: '3.7'
+
+services:
+  newman:
+    container_name: newman
+    build: .
+    command: sleep 365d

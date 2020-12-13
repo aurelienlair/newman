@@ -6,9 +6,9 @@ USER root
 
 ARG NEWMAN_VERSION="5.0.1"
 
-RUN mkdir /opt/src
-COPY . /opt/src
-RUN chown -R node:node /opt/src
+RUN mkdir /opt/newman
+COPY . /opt/newman
+RUN chown -R node:node /opt/newman
 
 RUN apk update \
     ; apk add --no-cache ca-certificates \
@@ -27,4 +27,7 @@ RUN apk update \
 
 USER node
 
-WORKDIR /opt/src
+WORKDIR /opt/newman
+
+RUN chmod a+x *.sh
+ENTRYPOINT [ "./entrypoint.sh" ]
