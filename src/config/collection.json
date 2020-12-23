@@ -1,0 +1,787 @@
+{
+	"info": {
+		"_postman_id": "6684afdc-5d9d-4c8b-b6ba-ea16636c4752",
+		"name": "Musement APIs",
+		"description": "https://api-docs.musement.com/docs/test-purchases",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Purchase flow with an activity with extra customer data",
+			"item": [
+				{
+					"name": "1 - Get activity",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check http status code\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{contentType}}"
+							},
+							{
+								"key": "X-Musement-Version",
+								"value": "{{apiVersion}}"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "{{acceptLanguage}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/activities/{{activityUuid}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"activities",
+								"{{activityUuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2 - Get date activity",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check http status code\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var body = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"date\", body[0].day);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{contentType}}"
+							},
+							{
+								"key": "X-Musement-Version",
+								"value": "{{apiVersion}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/activities/{{activityUuid}}/dates",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"activities",
+								"{{activityUuid}}",
+								"dates"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3 - Get schedule first day available",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check http status code\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var body = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"productIdAdult\", body[0].groups[0].slots[0].products[0].product_id);",
+									"postman.setEnvironmentVariable(\"productType\", body[0].groups[0].slots[0].products[0].type);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{contentType}}"
+							},
+							{
+								"key": "X-Musement-Currency",
+								"value": "{{currencyCode}}"
+							},
+							{
+								"key": "X-Musement-Version",
+								"value": "{{apiVersion}}"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "{{acceptLanguage}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/activities/{{activityUuid}}/dates/{{date}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"activities",
+								"{{activityUuid}}",
+								"dates",
+								"{{date}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4 - Create Cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check http status code\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var body = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"cartUuid\", body.uuid);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{contentType}}"
+							},
+							{
+								"key": "X-Musement-Currency",
+								"value": "{{currencyCode}}"
+							},
+							{
+								"key": "X-Musement-Version",
+								"value": "{{apiVersion}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/carts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"carts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5 - Add 2 adults on Musement product to cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check http status code\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var body = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"cart_item_uuid\", body.uuid);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{contentType}}"
+							},
+							{
+								"key": "X-Musement-Currency",
+								"value": "{{currencyCode}}"
+							},
+							{
+								"key": "X-Musement-Version",
+								"value": "{{apiVersion}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\" : \"{{productType}}\",\n  \"product_identifier\" : \"{{productIdAdult}}\",\n  \"quantity\": 2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/carts/{{cartUuid}}/items",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"carts",
+								"{{cartUuid}}",
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6 - Set customer to cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check http status code\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{contentType}}"
+							},
+							{
+								"key": "X-Musement-Version",
+								"value": "{{apiVersion}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstname\": \"Test\",\n  \"lastname\": \"Test Aurélien\",\n  \"email\": \"aurelien.lair@musement.com\",\n  \"musement_newsletter\": \"NO\",\n  \"thirdparty_newsletter\": \"NO\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/carts/{{cartUuid}}/customer",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"carts",
+								"{{cartUuid}}",
+								"customer"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get cart item participant info",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_base_url}}/carts/{{cart_uuid}}/items/{{cart_item_uuid}}/participants",
+									"host": [
+										"{{api_base_url}}"
+									],
+									"path": [
+										"carts",
+										"{{cart_uuid}}",
+										"items",
+										"{{cart_item_uuid}}",
+										"participants"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*",
+									"name": "Access-Control-Allow-Origin",
+									"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+								},
+								{
+									"key": "Access-Control-Expose-Headers",
+									"value": "Authorization,Accept-Language,Accept-Encoding,X-Musement-Currency,X-Musement-Version,cookie,x-api-key,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Location,X-Musement-Device-Type",
+									"name": "Access-Control-Expose-Headers",
+									"description": "Lets a server whitelist headers that browsers are allowed to access."
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache",
+									"name": "Cache-Control",
+									"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 03 May 2018 07:53:27 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "nginx/1.10.3",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked",
+									"name": "Transfer-Encoding",
+									"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Language",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "Vary",
+									"value": "X-Musement-Currency",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "Vary",
+									"value": "X-Musement-Version",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "Vary",
+									"value": "Origin",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "X-Debug-Token",
+									"value": "e9af65",
+									"name": "X-Debug-Token",
+									"description": "Custom header"
+								},
+								{
+									"key": "X-Debug-Token-Link",
+									"value": "https://musement.dev/app_dev.php/_profiler/e9af65",
+									"name": "X-Debug-Token-Link",
+									"description": "Custom header"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.1.16",
+									"name": "X-Powered-By",
+									"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+								}
+							],
+							"cookie": [],
+							"body": "[]"
+						}
+					]
+				},
+				{
+					"name": "7 - Get cart | For checking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check http status code\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{contentType}}"
+							},
+							{
+								"key": "X-Musement-Currency",
+								"value": "{{currencyCode}}"
+							},
+							{
+								"key": "X-Musement-Version",
+								"value": "{{apiVersion}}"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "{{acceptLanguage}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/carts/{{cartUuid}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"carts",
+								"{{cartUuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8 - Create Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check http status code\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var body = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"orderUuid\", body.uuid);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{contentType}}"
+							},
+							{
+								"key": "X-Musement-Currency",
+								"value": "{{currencyCode}}"
+							},
+							{
+								"key": "X-Musement-Version",
+								"value": "{{apiVersion}}"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "{{acceptLanguage}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"cart_uuid\" : \"{{cartUuid}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "9 - Pay the order with Stripe",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check http status code\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "{{acceptType}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{contentType}}"
+							},
+							{
+								"key": "X-Musement-Version",
+								"value": "{{apiVersion}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"order_uuid\":\"{{order_uuid}}\",\n\t\"stripe_token\":\"1233456789\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlMock}}/payments/stripe/payment",
+							"host": [
+								"{{baseUrlMock}}"
+							],
+							"path": [
+								"payments",
+								"stripe",
+								"payment"
+							]
+						},
+						"description": "Pay an order using stripe."
+					},
+					"response": [
+						{
+							"name": "9 - Pay the order with Stripe",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "{{acceptType}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "{{contentType}}"
+									},
+									{
+										"key": "X-Musement-Version",
+										"value": "{{apiVersion}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"order_uuid\":\"{{order_uuid}}\",\n\t\"stripe_token\":\"1233456789\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlMock}}/payments/stripe/payment",
+									"host": [
+										"{{baseUrlMock}}"
+									],
+									"path": [
+										"payments",
+										"stripe",
+										"payment"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Server",
+									"value": "nginx"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Language"
+								},
+								{
+									"key": "Vary",
+									"value": "X-Musement-Currency"
+								},
+								{
+									"key": "Vary",
+									"value": "X-Musement-Market"
+								},
+								{
+									"key": "Vary",
+									"value": "X-Musement-Version"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{}"
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"activityUuid\", \"102ab02b-2046-11e7-9cc9-06a7e332783f\");"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"postman.setEnvironmentVariable(\"baseUrl\", \"https://api-sandbox.musement.com/api/v3\");",
+					"postman.setEnvironmentVariable(\"baseUrlMock\", \"https://ebd289e0-53ea-44a8-aa03-f32e58a78eb4.mock.pstmn.io\");",
+					"postman.setEnvironmentVariable(\"apiVersion\", \"3.4.0\");",
+					"postman.setEnvironmentVariable(\"contentType\", \"application/json\");",
+					"postman.setEnvironmentVariable(\"acceptType\", \"application/json\");",
+					"postman.setEnvironmentVariable(\"currencyCode\", \"USD\");",
+					"postman.setEnvironmentVariable(\"acceptLanguage\", \"us\");"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
