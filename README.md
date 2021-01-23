@@ -16,16 +16,22 @@ If you will follow the set-up with Docker (see below) then install last [Docker]
 
 #### Docker
 
-From the root of the project build it (only once)
+From the root of the project build it (only once). If needed change version of the package accordingly (eg. newman:X.X.X)
 ```shell
 cd <YOUR_PROJECT_ROOT_DIRECTORY>
-docker pull aurelienlair/newman:1.0.0
-docker build -t newman:1.0.0 --force-rm .
+docker pull aurelienlair/newman:1.1.0
+docker build -t newman:1.1.0 --force-rm .
 ```
 
-Then run it
+Then run it from remote image
 ```shell
-docker run -t --rm -v (pwd)/YOUR_COLLECTION.json:/opt/newman/src/config/collection.json newman:1.0.0
+docker run -t -v PATH_TO_YOUR_PROJECT/src/config:/opt/newman/src/config --rm aurelienlair/newman:1.1.0
+```
+or to run it locally
+
+```shell
+docker build -t local-newman --force-rm .
+docker run -t -v PATH_TO_YOUR_PROJECT/src/config:/opt/newman/src/config --rm local-newman
 ```
 
 Example of output
@@ -92,7 +98,6 @@ Musement APIs
 
 ### Distro
 the remote container is [Node Alpine](https://hub.docker.com/_/node) based.
-
 
 ## Conventions
 
