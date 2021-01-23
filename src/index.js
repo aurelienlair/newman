@@ -5,7 +5,7 @@ try {
     collection: './src/config/collection.json',
     reporters: 'cli',
     bail: true
-});
+  });
 } catch (error) {
   console.log(error);
 }
