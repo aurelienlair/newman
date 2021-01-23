@@ -23,7 +23,7 @@ RUN apk update \
     ; mkdir -p /usr/local/share/npm-global \
     ; chown node:node /usr/local/share/npm-global \
     ; npm config -g set prefix /usr/local/share/npm-global \
-    ; npm install -g newman@${NEWMAN_VERSION}
+    ; npm install --loglevel=error -g newman@${NEWMAN_VERSION}
 
 USER node
 
